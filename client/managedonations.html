@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Manage Donations - DonorConnect</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <main class="admin-container">
+
+        <h1>Manage Donations</h1>
+
+        <p>View and manage donations</p>
+
+        <div id="donationsList">
+            Loading donations...
+        </div>
+
+        <br>
+
+        <a href="admindashboard.html">Back to Admin Dashboard</a>
+
+    </main>
+<script>
+    fetch("http://localhost:3000/api/donations")
+        .then(response => response.json())
+        .then(donations => {
+
+            const donationsList = document.getElementById("donationsList");
+
+            if (!donations || donations.length === 0) {
+                donationsList.innerHTML = "<p>No donations found.</p>";
+                return;
+            }
+
+            donationsList.innerHTML = "";
+
+            donations.forEach(donation => {
+
+                const donationCard = document.createElement("div");
+
+                donationCard.innerHTML = `
+                    <h3>${donation.item_name}</h3>
+                    <p>Category: ${donation.category}</p>
+                    <p>Quantity: ${donation.quantity}</p>
+                    <p>Location: ${donation.location}</p>
+                    <p>Description: ${donation.description}</p>
+                    <hr>
+                `;
+
+                donationsList.appendChild(donationCard);
+            });
+        })
+        .catch(error => {
+
+            console.error("Donations loading error:", error);
+
+            document.getElementById("donationsList").innerHTML =
+                "<p>Failed to load donations.</p>";
+        });
+</script>
+</body>
+
+</html>

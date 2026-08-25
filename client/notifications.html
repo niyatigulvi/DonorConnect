@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Notifications - DonorConnect</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="notifications-page">
+
+    <!-- Header -->
+    <header class="page-header">
+
+        <a href="home.html" class="back-button">←</a>
+
+        <div>
+            <h2>Notifications</h2>
+            <p>Your latest updates</p>
+        </div>
+
+    </header>
+
+
+    <!-- Main Content -->
+    <main class="notifications-container">
+
+        <div class="notifications-top">
+
+            <h1>Recent Notifications 🔔</h1>
+
+            <button id="markAllRead" type="button">
+                Mark all as read
+            </button>
+
+        </div>
+
+
+        <!-- Notification 1 -->
+        <div class="notification-card unread">
+
+            <div class="notification-icon green">
+                ✓
+            </div>
+
+            <div class="notification-content">
+
+                <h3>Request Approved</h3>
+
+                <p>
+                    Your request for Clean Cotton Clothes
+                    has been approved by the donor.
+                </p>
+
+                <small>10 minutes ago</small>
+
+            </div>
+
+        </div>
+
+
+        <!-- Notification 2 -->
+        <div class="notification-card unread">
+
+            <div class="notification-icon blue">
+                📚
+            </div>
+
+            <div class="notification-content">
+
+                <h3>New Books Available</h3>
+
+                <p>
+                    New books have been added near your location.
+                </p>
+
+                <small>1 hour ago</small>
+
+            </div>
+
+        </div>
+
+
+        <!-- Notification 3 -->
+        <div class="notification-card">
+
+            <div class="notification-icon orange">
+                🍱
+            </div>
+
+            <div class="notification-content">
+
+                <h3>Food Donation Available</h3>
+
+                <p>
+                    Fresh food donations are available
+                    in your nearby area.
+                </p>
+
+                <small>3 hours ago</small>
+
+            </div>
+
+        </div>
+
+
+        <!-- Notification 4 -->
+        <div class="notification-card">
+
+            <div class="notification-icon purple">
+                🎁
+            </div>
+
+            <div class="notification-content">
+
+                <h3>Donation Received</h3>
+
+                <p>
+                    Your donated items have been successfully
+                    listed on DonorConnect.
+                </p>
+
+                <small>Yesterday</small>
+
+            </div>
+
+        </div>
+
+
+        <!-- Empty Message -->
+        <div
+            id="noNotifications"
+            class="no-notifications"
+            style="display: none;">
+
+            <div>🔔</div>
+
+            <h3>No Notifications</h3>
+
+            <p>
+                You don't have any new notifications.
+            </p>
+
+        </div>
+
+    </main>
+
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+
+        <a href="home.html">
+            <span>🏠</span>
+            <small>Home</small>
+        </a>
+
+        <a href="donations.html">
+            <span>🎁</span>
+            <small>Donations</small>
+        </a>
+
+        <a href="donate.html" class="nav-donate">
+            <span>＋</span>
+        </a>
+
+        <a href="notifications.html" class="active">
+            <span>🔔</span>
+            <small>Alerts</small>
+        </a>
+
+        <a href="profile.html">
+            <span>👤</span>
+            <small>Profile</small>
+        </a>
+
+    </nav>
+
+
+    <script src="js/script.js"></script>
+
+</body>
+</html>

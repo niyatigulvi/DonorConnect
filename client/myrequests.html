@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Requests - DonorConnect</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="myrequests-page">
+
+    <!-- Header -->
+    <header class="page-header">
+
+        <a href="home.html" class="back-button">←</a>
+
+        <div>
+            <h2>My Requests</h2>
+            <p>Track your donation requests</p>
+        </div>
+
+    </header>
+
+
+    <!-- Main Content -->
+    <main class="myrequests-container">
+
+        <!-- Intro -->
+        <section class="myrequests-intro">
+
+            <h1>Your Requests 📩</h1>
+
+            <p>
+                Track the status of items you have requested.
+            </p>
+
+        </section>
+
+
+        <!-- Request Summary -->
+        <section class="request-summary">
+
+            <div class="request-summary-card">
+                <span>📩</span>
+
+                <div>
+                    <strong>3</strong>
+                    <small>Total Requests</small>
+                </div>
+            </div>
+
+
+            <div class="request-summary-card">
+                <span>⏳</span>
+
+                <div>
+                    <strong>1</strong>
+                    <small>Pending</small>
+                </div>
+            </div>
+
+
+            <div class="request-summary-card">
+                <span>✓</span>
+
+                <div>
+                    <strong>2</strong>
+                    <small>Approved</small>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- Requests -->
+        <section class="requests-list">
+            <div class="requests-heading"></div>
+             <h2>Request History</h2>
+             <a href="donations.html">
+                Find Donations
+            </a>
+        </div>
+        <div id="requestsList"></div>
+    </section>
+</main>
+  <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+
+        <a href="home.html">
+            <span>🏠</span>
+            <small>Home</small>
+        </a>
+
+        <a href="donations.html">
+            <span>🎁</span>
+            <small>Donations</small>
+        </a>
+
+        <a href="donate.html" class="nav-donate">
+            <span>＋</span>
+        </a>
+
+        <a href="notifications.html">
+            <span>🔔</span>
+            <small>Alerts</small>
+        </a>
+
+        <a href="profile.html" class="active">
+            <span>👤</span>
+            <small>Profile</small>
+        </a>
+
+    </nav>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const requestsList = document.getElementById("requestsList");
+
+    if (!requestsList) {
+        return;
+    }
+
+    const userId = localStorage.getItem("userId");
+
+    if (!userId) {
+        requestsList.innerHTML = "<p>Please login first.</p>";
+        return;
+    }
+fetch("http://localhost:3000/api/requests/" + userId)
+        .then(function (response) {
+            return response.json();
+        })
+                    .then(function (data) {
+
+            if (!data.success || !data.requests) {
+                requestsList.innerHTML =
+                    "<p>Failed to load requests.</p>";
+                return;
+            }
+
+            if (data.requests.length === 0) {
+                requestsList.innerHTML =
+                    "<p>No requests found.</p>";
+                return;
+            }
+
+            requestsList.innerHTML = "";
+
+            data.requests.forEach(function (request) {
+
+                const card = document.createElement("div");
+
+                card.className = "my-request-card";
+
+                card.innerHTML = `
+                    <div class="request-image">
+                        🎁
+                    </div>
+
+                    <div class="request-info">
+
+                        <span class="request-category">
+                            Donation
+                        </span>
+
+                        <h3>
+                            My Donation Request
+                        </h3>
+
+                        <p>
+                            ${request.message || "Request submitted successfully"}
+                        </p>
+
+                        <small>
+                            Status: ${request.status || "Pending"}
+                        </small>
+
+                    </div>
+
+                    <span class="request-status pending">
+                        ${request.status || "Pending"}
+                    </span>
+                `;
+
+                requestsList.appendChild(card);
+            });
+
+        })
+        .catch(function (error) {
+
+            console.log("Request Error:", error);
+
+            requestsList.innerHTML =
+                "<p>Unable to load requests.</p>";
+        });
+
+});
+</script>
+
+<script src="js/script.js"></script>
+
+</body>
+</html>
+    

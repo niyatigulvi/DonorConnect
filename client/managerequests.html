@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Manage Requests - DonorConnect</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <main class="admin-container">
+
+        <h1>Manage Requests</h1>
+
+        <p>Review donation requests</p>
+
+        <div id="requestsList">
+            Loading requests...
+        </div>
+
+        <button type="button" onclick="window.location.href='admindashboard.html'">
+            Back to Admin Dashboard
+        </button>
+
+    </main>
+
+    <script>
+    function updateRequest(requestId, status) {
+
+        fetch(`http://localhost:3000/api/admin/requests/${requestId}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                status: status
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+
+            if (data.success) {
+                alert(data.message);
+                loadRequests();
+            } else {
+                alert(data.message);
+            }
+
+        })
+        .catch(error => {
+            console.error(error);
+            alert("Failed to update request.");
+        });
+    }
+
+
+    function loadRequests() {
+
+        fetch("http://localhost:3000/api/admin/requests")
+            .then(response => response.json())
+            .then(data => {
+
+                const list = document.getElementById("requestsList");
+
+                if (!data.success || data.requests.length === 0) {
+                    list.innerHTML = "No donation requests found.";
+                    return;
+                }
+
+                list.innerHTML = data.requests.map(request => `
+
+                    <div>
+
+                        <p>Request ID: ${request.id}</p>
+
+                        <p>Donation ID: ${request.donation_id}</p>
+
+                        <p>Requester ID: ${request.requester_id}</p>
+
+                        <p>Message: ${request.message || ""}</p>
+
+                        <p>Status: ${request.status}</p>
+
+                        ${
+                            request.status === "pending"
+                            ? `
+                                <button
+                                    type="button"
+                                    onclick="updateRequest(${request.id}, 'approved')">
+                                    Approve
+                                </button>
+
+                                <button
+                                    type="button"
+                                    onclick="updateRequest(${request.id}, 'rejected')">
+                                    Reject
+                                </button>
+                            `
+                            : ""
+                        }
+
+                        <hr>
+
+                    </div>
+
+                `).join("");
+
+            })
+            .catch(error => {
+
+                console.error(error);
+
+                document.getElementById("requestsList").innerHTML =
+                    "Failed to load requests.";
+
+            });
+    }
+
+
+    loadRequests();
+</script>
+</body>
+</html>

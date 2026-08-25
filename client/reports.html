@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Reports - DonorConnect</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <main class="admin-container">
+
+        <h1>Reports</h1>
+
+        <p>View project statistics</p>
+
+        <div id="reportsData">
+            Loading reports...
+        </div>
+
+        <button type="button"
+            onclick="window.location.href='admindashboard.html'">
+            Back to Admin Dashboard
+        </button>
+<script>
+fetch("http://localhost:3000/api/admin/reports")
+    .then(response => response.json())
+    .then(data => {
+
+        const reports = data.reports;
+
+        document.getElementById("reportsData").innerHTML = `
+            <div>
+                <h2>Total Users</h2>
+                <p>${reports.totalUsers}</p>
+            </div>
+
+            <div>
+                <h2>Total Donations</h2>
+                <p>${reports.totalDonations}</p>
+            </div>
+
+            <div>
+                <h2>Total Requests</h2>
+                <p>${reports.totalRequests}</p>
+            </div>
+
+            <div>
+                <h2>Available Donations</h2>
+                <p>${reports.availableDonations}</p>
+            </div>
+        `;
+
+    })
+    .catch(error => {
+        console.error(error);
+
+        document.getElementById("reportsData").innerHTML =
+            "Failed to load reports.";
+    });
+</script>
+    </main>
+
+</body>
+</html>

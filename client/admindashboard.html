@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard - DonorConnect</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="admin-dashboard-page">
+
+    <!-- Admin Header -->
+    <header class="admin-header">
+
+        <div class="admin-brand">
+            <div class="admin-brand-icon">🛡️</div>
+
+            <div>
+                <h2>DonorConnect</h2>
+                <p>Admin Dashboard</p>
+            </div>
+        </div>
+
+        <button
+            type="button"
+            id="adminLogout"
+            class="admin-logout">
+            Logout
+        </button>
+
+    </header>
+
+
+    <!-- Main Content -->
+    <main class="admin-container">
+
+        <!-- Welcome -->
+        <section class="admin-welcome">
+
+            <div>
+                <h1>Welcome, Admin 👋</h1>
+
+                <p>
+                    Manage donations, requests and users
+                    from one place.
+                </p>
+            </div>
+
+        </section>
+
+
+        <!-- Statistics -->
+        <section class="admin-stats">
+
+            <div class="admin-stat-card">
+
+                <div class="admin-stat-icon users-icon">
+                    👥
+                </div>
+
+                <div>
+                    <strong>120</strong>
+                    <small>Total Users</small>
+                </div>
+
+            </div>
+
+
+            <div class="admin-stat-card">
+
+                <div class="admin-stat-icon donation-icon">
+                    🎁
+                </div>
+
+                <div>
+                    <strong>85</strong>
+                    <small>Total Donations</small>
+                </div>
+
+            </div>
+
+
+            <div class="admin-stat-card">
+
+                <div class="admin-stat-icon request-icon">
+                    📩
+                </div>
+
+                <div>
+                    <strong>42</strong>
+                    <small>Total Requests</small>
+                </div>
+
+            </div>
+
+
+            <div class="admin-stat-card">
+
+                <div class="admin-stat-icon pending-icon">
+                    ⏳
+                </div>
+
+                <div>
+                    <strong>12</strong>
+                    <small>Pending Requests</small>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Management -->
+        <section class="admin-section">
+
+            <h2>Management</h2>
+
+            <div class="admin-management-grid">
+
+<a href="manageusers.html" class="admin-management-card">
+
+    <span>👥</span>
+
+    <strong>Manage Users</strong>
+
+    <small>
+        View registered users
+    </small>
+
+</a>
+
+                <a href="managedonations.html" class="admin-management-card">
+
+    <span>🎁</span>
+
+    <strong>Manage Donations</strong>
+
+    <small>
+        View and manage donations
+    </small>
+
+</a><button type="button" class="admin-management-card" onclick="window.location.href='managerequests.html'">
+
+    <span>📩</span>
+
+    <strong>Manage Requests</strong>
+
+    <small>
+        Review donation requests
+    </small>
+
+</button>
+
+
+                <button type="button"
+        class="admin-management-card"
+        onclick="window.location.href='reports.html'">
+
+    <span>📊</span>
+
+    <strong>Reports</strong>
+
+    <small>
+        View project statistics
+    </small>
+
+</button>
+
+            </div>
+
+        </section>
+
+
+        <!-- Recent Donations -->
+        <section class="admin-section">
+
+            <div class="admin-section-heading">
+
+                <h2>Recent Donations</h2>
+
+                <span>View All</span>
+
+            </div>
+
+
+            <div class="admin-table-wrapper">
+
+                <table class="admin-table">
+
+                    <thead>
+
+                        <tr>
+                            <th>Item</th>
+                            <th>Category</th>
+                            <th>Donor</th>
+                            <th>Status</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+                            <td>Clean Clothes</td>
+                            <td>Clothes</td>
+                            <td>User 01</td>
+                            <td>
+                                <span class="table-status approved">
+                                    Approved
+                                </span>
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                            <td>College Books</td>
+                            <td>Books</td>
+                            <td>User 02</td>
+                            <td>
+                                <span class="table-status approved">
+                                    Approved
+                                </span>
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                            <td>Food Packets</td>
+                            <td>Food</td>
+                            <td>User 03</td>
+                            <td>
+                                <span class="table-status pending">
+                                    Pending
+                                </span>
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- Recent Requests -->
+        <section class="admin-section">
+
+            <div class="admin-section-heading">
+
+                <h2>Recent Requests</h2>
+
+                <span>View All</span>
+
+            </div>
+                    <div>
+                        <strong>
+                            Clothes Request
+                        </strong>
+
+                        <small>
+                            Requested by User 04
+                        </small>
+                    </div>
+
+                    <span class="table-status pending">
+                        Pending
+                    </span>
+
+                </div>
+
+
+                <div class="admin-request-card">
+
+                    <div class="admin-request-icon">
+                        📚
+                    </div>
+
+                    <div>
+                        <strong>
+                            Books Request
+                        </strong>
+
+                        <small>
+                            Requested by User 05
+                        </small>
+                    </div>
+
+                    <span class="table-status approved">
+                        Approved
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script src="js/script.js"></script>
+
+</body>
+</html>

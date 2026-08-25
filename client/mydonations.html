@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Donations - DonorConnect</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="mydonations-page">
+
+    <!-- Header -->
+    <header class="page-header">
+
+        <a href="home.html" class="back-button">←</a>
+
+        <div>
+            <h2>My Donations</h2>
+            <p>Manage your donated items</p>
+        </div>
+
+    </header>
+
+
+    <!-- Main Content -->
+    <main class="mydonations-container">
+
+        <!-- Intro -->
+        <section class="mydonations-intro">
+
+            <h1>Your Donations 💚</h1>
+
+            <p>
+                Track and manage the items you have donated.
+            </p>
+
+        </section>
+
+
+        <!-- Summary -->
+        <section class="donation-summary">
+
+            <div class="summary-card">
+                <span>🎁</span>
+
+                <div>
+                    <strong>3</strong>
+                    <small>Total Donations</small>
+                </div>
+            </div>
+
+
+            <div class="summary-card">
+                <span>⏳</span>
+
+                <div>
+                    <strong>1</strong>
+                    <small>Pending</small>
+                </div>
+            </div>
+
+
+            <div class="summary-card">
+                <span>✓</span>
+
+                <div>
+                    <strong>2</strong>
+                    <small>Completed</small>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- Donations -->
+        <section class="my-donations-list">
+
+            <div class="list-heading">
+
+                <h2>Donation History</h2>
+
+                <a href="donate.html">
+                    + Donate More
+                </a>
+
+            </div>
+
+
+            <!-- Donation 1 -->
+            <div class="my-donation-card">
+
+                <div class="my-donation-image clothes-bg">
+                    👕
+                </div>
+
+                <div class="my-donation-info">
+
+                    <span class="my-category">
+                        Clothes
+                    </span>
+
+                    <h3>Clean Cotton Clothes</h3>
+
+                    <p>5 items • Good condition</p>
+
+                    <small>
+                        Donated on: 16 Aug 2026
+                    </small>
+
+                </div>
+
+                <span class="status completed">
+                    Completed
+                </span>
+
+            </div>
+
+
+            <!-- Donation 2 -->
+            <div class="my-donation-card">
+
+                <div class="my-donation-image books-bg">
+                    📚
+                </div>
+
+                <div class="my-donation-info">
+
+                    <span class="my-category">
+                        Books
+                    </span>
+
+                    <h3>College Study Books</h3>
+
+                    <p>8 books • Good condition</p>
+
+                    <small>
+                        Donated on: 15 Aug 2026
+                    </small>
+
+                </div>
+
+                <span class="status completed">
+                    Completed
+                </span>
+
+            </div>
+
+
+            <!-- Donation 3 -->
+            <div class="my-donation-card">
+
+                <div class="my-donation-image food-bg">
+                    🍱
+                </div>
+
+                <div class="my-donation-info">
+
+                    <span class="my-category">
+                        Food
+                    </span>
+
+                    <h3>Fresh Packed Food</h3>
+
+                    <p>10 packets • Fresh</p>
+
+                    <small>
+                        Donated on: 16 Aug 2026
+                    </small>
+
+                </div>
+
+                <span class="status pending">
+                    Pending
+                </span>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+
+        <a href="home.html">
+            <span>🏠</span>
+            <small>Home</small>
+        </a>
+
+        <a href="donations.html">
+            <span>🎁</span>
+            <small>Donations</small>
+        </a>
+
+        <a href="donate.html" class="nav-donate">
+            <span>＋</span>
+        </a>
+
+        <a href="notifications.html">
+            <span>🔔</span>
+            <small>Alerts</small>
+        </a>
+        <a href="profile.html" class="active">
+            <span>👤</span>
+            <small>Profile</small>
+        </a>
+    </nav>
+    <script src="js/script.js"></script>
+<script>
+async function loadDonations() {
+    try {
+        const response = await fetch('http://localhost:3000/api/donations');
+        if (!response.ok) {
+            throw new Error('Failed to fetch donations');
+        }
+        const donations = await response.json();
+        const donationsContainer = document.querySelector('.available-donations');
+        donations.forEach(donation => {
+            const card = document.createElement('div');
+            card.className = 'available-card';
+            card.dataset.category = donation.category;
+            let emoji = '🎁';
+            if (donation.category === 'Clothes') {
+                emoji = '👕';
+            } else if (donation.category === 'Books') {
+                emoji = '📚';
+            } else if (donation.category === 'Food') {
+                emoji = '🍱';
+            }
+            card.innerHTML = `
+                <div class="available-image">
+                    ${emoji}
+                </div>
+                <div class="available-info">
+                    <span class="available-category">
+                        ${donation.category}
+                    </span>
+                    <h3>${donation.title}</h3>
+                    <p>
+                        ${donation.description}
+                    </p>
+                    <div class="available-details">
+                        <span>📦 ${donation.quantity} items</span>
+                    </div>
+                    <a href="details.html" class="details-btn">
+                        View Details
+                    </a>
+                </div>
+            `;
+            donationsContainer.appendChild(card);
+        });
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+loadDonations();
+</script>
+</body>
+</html>

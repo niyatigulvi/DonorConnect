@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Request Donation - DonorConnect</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="request-page">
+
+    <!-- Header -->
+    <header class="page-header">
+
+        <a href="details.html" class="back-button">←</a>
+
+        <div>
+            <h2>Request Donation</h2>
+            <p>Request an item you need</p>
+        </div>
+
+    </header>
+
+
+    <!-- Main -->
+    <main class="request-container">
+
+        <section class="request-intro">
+
+            <h1>Request This Donation 💚</h1>
+
+            <p>
+                Please provide your details so the donor can
+                contact you regarding the donation.
+            </p>
+
+        </section>
+
+
+        <!-- Selected Donation -->
+        <section class="selected-donation">
+
+            <div class="selected-icon">
+                👕
+            </div>
+
+            <div>
+                <span>Clothes</span>
+
+                <h3>Clean Cotton Clothes</h3>
+
+                <p>5 items • Good condition</p>
+            </div>
+
+        </section>
+
+
+        <!-- Request Form -->
+        <section class="request-form-card">
+
+            <form id="requestForm">
+                <input type="hidden"id="donationId"value="2">
+                <div class="form-group">
+
+                    <label for="requesterName">
+                        Full Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="requesterName"
+                        placeholder="Enter your full name"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label for="requesterEmail">
+                            Email
+                        </label>
+
+                        <input
+                            type="email"
+                            id="requesterEmail"
+                            placeholder="Enter your email"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="requesterPhone">
+                            Phone Number
+                        </label>
+
+                        <input
+                            type="tel"
+                            id="requesterPhone"
+                            placeholder="Enter phone number"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="requestQuantity">
+                        Required Quantity
+                    </label>
+
+                    <input
+                        type="number"
+                        id="requestQuantity"
+                        min="1"
+                        placeholder="Enter quantity"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="requestReason">
+                        Why do you need this item?
+                    </label>
+
+                    <textarea
+                        id="requestReason"
+                        rows="4"
+                        placeholder="Write your reason..."
+                        required
+                    ></textarea>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="requestLocation">
+                        Your Location
+                    </label>
+
+                    <input
+                        type="text"
+                        id="requestLocation"
+                        placeholder="Enter your location"
+                        required
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="submit-request-btn">
+
+                    Send Request
+
+                </button>
+
+            </form>
+
+        </section>
+
+    </main>
+
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+
+        <a href="home.html">
+            <span>🏠</span>
+            <small>Home</small>
+        </a>
+
+        <a href="donations.html" class="active">
+            <span>🎁</span>
+            <small>Donations</small>
+        </a>
+
+        <a href="donate.html" class="nav-donate">
+            <span>＋</span>
+        </a>
+
+        <a href="notifications.html">
+            <span>🔔</span>
+            <small>Alerts</small>
+        </a>
+
+        <a href="profile.html">
+            <span>👤</span>
+            <small>Profile</small>
+        </a>
+
+    </nav>
+
+
+    <script src="js/script.js"></script>
+
+</body>
+</html>
