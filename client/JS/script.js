@@ -21,33 +21,191 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (registerForm) {
 
-        registerForm.addEventListener("submit", function (event) {
+        registerForm.addEventListener("submit", async function (event) {
 
             event.preventDefault();
 
+            const name =
+                document.getElementById("fullName").value.trim();
+
+            const email =
+                document.getElementById("registerEmail").value.trim();
+
+            const mobile =
+                document.getElementById("mobile").value.trim();
+
             const password =
-                document.getElementById("registerPassword");
+                document.getElementById("registerPassword").value;
 
             const confirmPassword =
-                document.getElementById("confirmPassword");
+                document.getElementById("confirmPassword").value;
 
 
-            if (password && confirmPassword) {
+            if (password !== confirmPassword) {
 
-                if (password.value !== confirmPassword.value) {
+                alert("Password and Confirm Password do not match.");
 
-                    alert("Password and Confirm Password do not match.");
-
-                    return;
-                }
-
+                return;
             }
 
 
-            // Direct Home Page
-            window.location.href = "home.html";
+            try {
+
+                const response = await fetch(
+                    "http://localhost:3000/api/register",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify({
+                            name: name,
+                            email: email,
+                            mobile: mobile,
+                            password: password
+                        })
+                    }
+                );
+
+
+                const data = await response.json();
+
+
+                if (data.success) {
+
+                    alert("Registration successful! Please login.");
+
+                    window.location.href = "login.html";
+
+                } else {
+
+                    alert(
+                        data.message ||
+                        "Registration failed."
+                    );
+
+                }
+
+            } catch (error) {
+
+                console.error(
+                    "Registration Error:",
+                    error
+                );
+
+                alert(
+                    "Server connection failed. Please start the server."
+                );
+
+            }
 
         });
+
+    }
+
+
+    /* ==============================
+       LOGIN
+       ============================== */
+
+    const loginForm =
+        document.getElementById("loginForm");
+
+    if (loginForm) {
+
+        loginForm.addEventListener(
+            "submit",
+            async function (event) {
+
+                event.preventDefault();
+
+
+                const email =
+                    document.getElementById(
+                        "loginEmail"
+                    ).value.trim();
+
+
+                const password =
+                    document.getElementById(
+                        "loginPassword"
+                    ).value;
+
+
+                try {
+
+                    const response = await fetch(
+                        "http://localhost:3000/api/login",
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body: JSON.stringify({
+                                email: email,
+                                password: password
+                            })
+                        }
+                    );
+
+
+                    const data =
+                        await response.json();
+
+
+                    if (data.success) {
+
+                        localStorage.setItem(
+                            "userId",
+                            data.user.id
+                        );
+
+                        localStorage.setItem(
+                            "userName",
+                            data.user.name
+                        );
+
+                        localStorage.setItem(
+                            "userEmail",
+                            data.user.email
+                        );
+
+
+                        alert("Login successful!");
+
+
+                        window.location.href =
+                            "home.html";
+
+                    } else {
+
+                        alert(
+                            data.message ||
+                            "Invalid email or password."
+                        );
+
+                    }
+
+                } catch (error) {
+
+                    console.error(
+                        "Login Error:",
+                        error
+                    );
+
+                    alert(
+                        "Server connection failed!"
+                    );
+
+                }
+
+            }
+        );
 
     }
 
@@ -57,108 +215,158 @@ document.addEventListener("DOMContentLoaded", function () {
        ============================== */
 
     const categoryButtons =
-        document.querySelectorAll(".donate-category");
+        document.querySelectorAll(
+            ".donate-category"
+        );
+
 
     const selectedCategory =
-        document.getElementById("selectedCategory");
+        document.getElementById(
+            "selectedCategory"
+        );
 
 
-    if (categoryButtons.length > 0 && selectedCategory) {
+    if (
+        categoryButtons.length > 0 &&
+        selectedCategory
+    ) {
 
         categoryButtons.forEach(function (button) {
 
-            button.addEventListener("click", function () {
+            button.addEventListener(
+                "click",
+                function () {
 
-                categoryButtons.forEach(function (item) {
+                    categoryButtons.forEach(
+                        function (item) {
 
-                    item.classList.remove("active");
+                            item.classList.remove(
+                                "active"
+                            );
 
-                });
+                        }
+                    );
 
-                this.classList.add("active");
 
-                selectedCategory.value =
-                    this.getAttribute("data-category");
+                    this.classList.add("active");
 
-            });
+
+                    selectedCategory.value =
+                        this.getAttribute(
+                            "data-category"
+                        );
+
+                }
+            );
 
         });
 
     }
 
 
-    
     /* ==============================
        AVAILABLE DONATIONS FILTER
        ============================== */
 
     const filterButtons =
-        document.querySelectorAll(".filter-btn");
+        document.querySelectorAll(
+            ".filter-btn"
+        );
+
 
     const donationCards =
-        document.querySelectorAll(".available-card");
+        document.querySelectorAll(
+            ".available-card"
+        );
+
 
     const donationSearch =
-        document.getElementById("donationsSearch");
+        document.getElementById(
+            "donationsSearch"
+        );
+
 
     const noDonations =
-        document.getElementById("noDonations");
+        document.getElementById(
+            "noDonations"
+        );
 
 
-    if (filterButtons.length > 0 && donationCards.length > 0) {
+    if (
+        filterButtons.length > 0 &&
+        donationCards.length > 0
+    ) {
 
         filterButtons.forEach(function (button) {
 
-            button.addEventListener("click", function () {
+            button.addEventListener(
+                "click",
+                function () {
 
-                filterButtons.forEach(function (item) {
+                    filterButtons.forEach(
+                        function (item) {
 
-                    item.classList.remove("active");
+                            item.classList.remove(
+                                "active"
+                            );
 
-                });
-
-                this.classList.add("active");
-
-                const filter =
-                    this.getAttribute("data-filter");
-
-                let visibleCount = 0;
-
-
-                donationCards.forEach(function (card) {
-
-                    const category =
-                        card.getAttribute("data-category");
+                        }
+                    );
 
 
-                    if (
-                        filter === "all" ||
-                        category === filter
-                    ) {
+                    this.classList.add("active");
 
-                        card.style.display = "block";
 
-                        visibleCount++;
+                    const filter =
+                        this.getAttribute(
+                            "data-filter"
+                        );
 
-                    } else {
 
-                        card.style.display = "none";
+                    let visibleCount = 0;
+
+
+                    donationCards.forEach(
+                        function (card) {
+
+                            const category =
+                                card.getAttribute(
+                                    "data-category"
+                                );
+
+
+                            if (
+                                filter === "all" ||
+                                category === filter
+                            ) {
+
+                                card.style.display =
+                                    "block";
+
+                                visibleCount++;
+
+                            } else {
+
+                                card.style.display =
+                                    "none";
+
+                            }
+
+                        }
+                    );
+
+
+                    if (noDonations) {
+
+                        noDonations.style.display =
+                            visibleCount === 0
+                                ? "block"
+                                : "none";
 
                     }
 
-                });
-
-
-                if (noDonations) {
-
-                    noDonations.style.display =
-                        visibleCount === 0
-                            ? "block"
-                            : "none";
-
                 }
-
-            });
+            );
 
         });
 
@@ -171,534 +379,808 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (donationSearch) {
 
-        donationSearch.addEventListener("input", function () {
+        donationSearch.addEventListener(
+            "input",
+            function () {
 
-            const searchText =
-                this.value.toLowerCase().trim();
-
-            let visibleCount = 0;
-
-
-            donationCards.forEach(function (card) {
-
-                const cardText =
-                    card.textContent.toLowerCase();
+                const searchText =
+                    this.value
+                        .toLowerCase()
+                        .trim();
 
 
-                if (cardText.includes(searchText)) {
+                let visibleCount = 0;
 
-                    card.style.display = "block";
 
-                    visibleCount++;
+                donationCards.forEach(
+                    function (card) {
 
-                } else {
+                        const cardText =
+                            card.textContent
+                                .toLowerCase();
 
-                    card.style.display = "none";
+
+                        if (
+                            cardText.includes(
+                                searchText
+                            )
+                        ) {
+
+                            card.style.display =
+                                "block";
+
+                            visibleCount++;
+
+                        } else {
+
+                            card.style.display =
+                                "none";
+
+                        }
+
+                    }
+                );
+
+
+                if (noDonations) {
+
+                    noDonations.style.display =
+                        visibleCount === 0
+                            ? "block"
+                            : "none";
 
                 }
 
-            });
+            }
+        );
+
+    }
 
 
-            if (noDonations) {
+    /* ==============================
+       LOGOUT
+       ============================== */
 
-                noDonations.style.display =
-                    visibleCount === 0
-                        ? "block"
-                        : "none";
+    const logoutButton =
+        document.getElementById(
+            "logoutButton"
+        );
+
+
+    if (logoutButton) {
+
+        logoutButton.addEventListener(
+            "click",
+            function () {
+
+                localStorage.clear();
+
+                window.location.href =
+                    "login.html";
 
             }
+        );
 
-        });
+    }
+
+
+    /* ==============================
+       MARK ALL NOTIFICATIONS READ
+       ============================== */
+
+    const markAllRead =
+        document.getElementById(
+            "markAllRead"
+        );
+
+
+    if (markAllRead) {
+
+        markAllRead.addEventListener(
+            "click",
+            function () {
+
+                const unreadNotifications =
+                    document.querySelectorAll(
+                        ".notification-card.unread"
+                    );
+
+
+                unreadNotifications.forEach(
+                    function (notification) {
+
+                        notification.classList.remove(
+                            "unread"
+                        );
+
+                    }
+                );
+
+            }
+        );
+
+    }
+
+
+    /* ==============================
+       CONTACT FORM
+       ============================== */
+
+    const contactForm =
+        document.getElementById(
+            "contactForm"
+        );
+
+
+    if (contactForm) {
+
+        contactForm.addEventListener(
+            "submit",
+            function (event) {
+
+                event.preventDefault();
+
+                window.location.href =
+                    "home.html";
+
+            }
+        );
+
+    }
+
+
+    /* ==============================
+       ADMIN LOGIN
+       ============================== */
+
+    const adminLoginForm =
+        document.getElementById(
+            "adminLoginForm"
+        );
+
+
+    if (adminLoginForm) {
+
+        adminLoginForm.addEventListener(
+            "submit",
+            function (event) {
+
+                event.preventDefault();
+
+                window.location.href =
+                    "admindashboard.html";
+
+            }
+        );
+
+    }
+
+
+    /* ==============================
+       ADMIN LOGOUT
+       ============================== */
+
+    const adminLogout =
+        document.getElementById(
+            "adminLogout"
+        );
+
+
+    if (adminLogout) {
+
+        adminLogout.addEventListener(
+            "click",
+            function () {
+
+                window.location.href =
+                    "adminlogin.html";
+
+            }
+        );
+
+    }
+
+
+    /* ==============================
+       DONATION FORM
+       ============================== */
+
+    const donationForm =
+        document.getElementById(
+            "donationForm"
+        );
+
+
+    if (donationForm) {
+
+        const donationCategoryButtons =
+            document.querySelectorAll(
+                ".donate-category"
+            );
+
+
+        const donationSelectedCategory =
+            document.getElementById(
+                "selectedCategory"
+            );
+
+
+        donationCategoryButtons.forEach(
+            function (button) {
+
+                button.addEventListener(
+                    "click",
+                    function () {
+
+                        donationCategoryButtons.forEach(
+                            function (btn) {
+
+                                btn.classList.remove(
+                                    "active"
+                                );
+
+                            }
+                        );
+
+
+                        this.classList.add(
+                            "active"
+                        );
+
+
+                        if (
+                            donationSelectedCategory
+                        ) {
+
+                            donationSelectedCategory.value =
+                                this.dataset.category;
+
+                        }
+
+                    }
+                );
+
+            }
+        );
+
+
+        donationForm.addEventListener(
+            "submit",
+            async function (event) {
+
+                event.preventDefault();
+
+
+                const userId =
+                    localStorage.getItem(
+                        "userId"
+                    );
+
+
+                if (!userId) {
+
+                    alert(
+                        "Please login first!"
+                    );
+
+                    window.location.href =
+                        "login.html";
+
+                    return;
+                }
+
+
+                const category =
+                    document.getElementById(
+                        "selectedCategory"
+                    ).value;
+
+
+                const itemName =
+                    document.getElementById(
+                        "itemName"
+                    ).value.trim();
+
+
+                const quantity =
+                    document.getElementById(
+                        "quantity"
+                    ).value;
+
+
+                const condition =
+                    document.getElementById(
+                        "condition"
+                    ).value;
+
+
+                const description =
+                    document.getElementById(
+                        "description"
+                    ).value.trim();
+
+
+                const location =
+                    document.getElementById(
+                        "location"
+                    ).value.trim();
+
+
+                try {
+
+                    const response =
+                        await fetch(
+                            "http://localhost:3000/api/donations",
+                            {
+                                method: "POST",
+
+                                headers: {
+                                    "Content-Type":
+                                        "application/json"
+                                },
+
+                                body: JSON.stringify({
+
+                                    user_id: userId,
+
+                                    category: category,
+
+                                    item_name: itemName,
+
+                                    description:
+                                        description,
+
+                                    quantity: quantity,
+
+                                    condition: condition,
+
+                                    location: location
+
+                                })
+
+                            }
+                        );
+
+
+                    const data =
+                        await response.json();
+
+
+                    if (data.success) {
+
+                        alert(
+                            "Donation submitted successfully!"
+                        );
+
+
+                        donationForm.reset();
+
+
+                        if (
+                            donationSelectedCategory
+                        ) {
+
+                            donationSelectedCategory.value =
+                                "Clothes";
+
+                        }
+
+
+                        window.location.href =
+                            "mydonations.html";
+
+                    } else {
+
+                        alert(
+                            data.message ||
+                            "Donation failed."
+                        );
+
+                    }
+
+                } catch (error) {
+
+                    console.error(
+                        "Donation Error:",
+                        error
+                    );
+
+                    alert(
+                        "Server connection failed!"
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* ==============================
+       REQUEST FORM
+       ============================== */
+
+    const requestForm =
+        document.getElementById(
+            "requestForm"
+        );
+
+
+    if (requestForm) {
+
+        requestForm.addEventListener(
+            "submit",
+            async function (event) {
+
+                event.preventDefault();
+
+
+                const donationId =
+                    document.getElementById(
+                        "donationId"
+                    ).value;
+
+
+                const requesterId =
+                    localStorage.getItem(
+                        "userId"
+                    );
+
+
+                const requestReason =
+                    document.getElementById(
+                        "requestReason"
+                    ).value.trim();
+
+
+                if (!requesterId) {
+
+                    alert(
+                        "Please login first!"
+                    );
+
+                    window.location.href =
+                        "login.html";
+
+                    return;
+                }
+
+
+                try {
+
+                    const response =
+                        await fetch(
+                            "http://localhost:3000/api/requests",
+                            {
+                                method: "POST",
+
+                                headers: {
+                                    "Content-Type":
+                                        "application/json"
+                                },
+
+                                body: JSON.stringify({
+
+                                    donation_id:
+                                        donationId,
+
+                                    requester_id:
+                                        requesterId,
+
+                                    message:
+                                        requestReason
+
+                                })
+
+                            }
+                        );
+
+
+                    const data =
+                        await response.json();
+
+
+                    if (data.success) {
+
+                        alert(
+                            "Request submitted successfully!"
+                        );
+
+
+                        requestForm.reset();
+
+
+                        window.location.href =
+                            "myrequests.html";
+
+                    } else {
+
+                        alert(
+                            data.message ||
+                            "Request failed."
+                        );
+
+                    }
+
+                } catch (error) {
+
+                    console.error(
+                        "Request Error:",
+                        error
+                    );
+
+                    alert(
+                        "Server connection failed!"
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* ==============================
+       LOAD MY REQUESTS
+       ============================== */
+
+    const myRequestsList =
+        document.getElementById(
+            "requestsList"
+        );
+
+
+    if (myRequestsList) {
+
+        const userId =
+            localStorage.getItem(
+                "userId"
+            );
+
+
+        if (!userId) {
+
+            myRequestsList.innerHTML =
+                "<p>Please login first.</p>";
+
+        } else {
+
+            fetch(
+                `http://localhost:3000/api/requests/${userId}`
+            )
+
+                .then(function (response) {
+
+                    return response.json();
+
+                })
+
+                .then(function (data) {
+
+                    console.log(
+                        "MY REQUESTS:",
+                        data
+                    );
+
+
+                    if (!data.success) {
+
+                        myRequestsList.innerHTML =
+                            "<p>Failed to load requests.</p>";
+
+                        return;
+                    }
+
+
+                    if (
+                        !data.requests ||
+                        data.requests.length === 0
+                    ) {
+
+                        myRequestsList.innerHTML =
+                            "<p>No requests found.</p>";
+
+                        return;
+                    }
+
+
+                    myRequestsList.innerHTML =
+                        "";
+
+
+                    data.requests.forEach(
+                        function (request) {
+
+                            const card =
+                                document.createElement(
+                                    "div"
+                                );
+
+
+                            card.className =
+                                "my-request-card";
+
+
+                            card.innerHTML = `
+
+                                <div class="request-image">
+                                    🎁
+                                </div>
+
+                                <div class="request-info">
+
+                                    <span class="request-category">
+                                        ${request.category || "Donation"}
+                                    </span>
+
+                                    <h3>
+                                        ${request.item_name || "Requested Donation"}
+                                    </h3>
+
+                                    <p>
+                                        ${request.message || "Request submitted"}
+                                    </p>
+
+                                    <small>
+                                        Quantity:
+                                        ${request.quantity || 1}
+                                    </small>
+
+                                    <br>
+
+                                    <small>
+                                        Request ID:
+                                        ${request.id}
+                                    </small>
+
+                                </div>
+
+                                <span class="request-status ${request.status || "pending"}">
+                                    ${request.status || "pending"}
+                                </span>
+
+                            `;
+
+
+                            myRequestsList.appendChild(
+                                card
+                            );
+
+                        }
+                    );
+
+                })
+
+                .catch(function (error) {
+
+                    console.error(
+                        "MY REQUESTS ERROR:",
+                        error
+                    );
+
+
+                    myRequestsList.innerHTML =
+                        "<p>Unable to load requests.</p>";
+
+                });
+
+        }
+
+    }
+
+
+    /* ==============================
+       ADMIN REQUESTS
+       ============================== */
+
+    const adminRequestList =
+        document.getElementById(
+            "adminRequestList"
+        );
+
+
+    if (adminRequestList) {
+
+        fetch(
+            "http://localhost:3000/api/admin/requests"
+        )
+
+            .then(function (response) {
+
+                return response.json();
+
+            })
+
+            .then(function (data) {
+
+                if (!data.success) {
+
+                    adminRequestList.innerHTML =
+                        "<p>Failed to load requests.</p>";
+
+                    return;
+                }
+
+
+                if (
+                    !data.requests ||
+                    data.requests.length === 0
+                ) {
+
+                    adminRequestList.innerHTML =
+                        "<p>No requests found.</p>";
+
+                    return;
+                }
+
+
+                adminRequestList.innerHTML =
+                    "";
+
+
+                data.requests.forEach(
+                    function (request) {
+
+                        const card =
+                            document.createElement(
+                                "div"
+                            );
+
+
+                        card.className =
+                            "admin-request-card";
+
+
+                        card.innerHTML = `
+
+                            <div class="admin-request-icon">
+                                📩
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    Donation Request #${request.id}
+                                </strong>
+
+                                <small>
+                                    Donation ID:
+                                    ${request.donation_id}
+                                </small>
+
+                            </div>
+
+                            <span class="table-status ${request.status}">
+                                ${request.status}
+                            </span>
+
+                        `;
+
+
+                        adminRequestList.appendChild(
+                            card
+                        );
+
+                    }
+                );
+
+            })
+
+            .catch(function (error) {
+
+                console.error(
+                    "Admin Requests Error:",
+                    error
+                );
+
+
+                adminRequestList.innerHTML =
+                    "<p>Unable to load requests.</p>";
+
+            });
 
     }
 
 });
-
-/* ==============================
-   LOGOUT
-   ============================== */
-
-const logoutButton =
-    document.getElementById("logoutButton");
-
-if (logoutButton) {
-
-    logoutButton.addEventListener("click", function () {
-
-        window.location.href = "login.html";
-
-    });
-
-}
-
-/* ==============================
-   MARK ALL NOTIFICATIONS READ
-   ============================== */
-
-const markAllRead =
-    document.getElementById("markAllRead");
-
-if (markAllRead) {
-
-    markAllRead.addEventListener("click", function () {
-
-        const unreadNotifications =
-            document.querySelectorAll(".notification-card.unread");
-
-        unreadNotifications.forEach(function (notification) {
-
-            notification.classList.remove("unread");
-
-        });
-
-    });
-
-}
-
-/* ==============================
-   CONTACT FORM
-   ============================== */
-
-const contactForm =
-    document.getElementById("contactForm");
-
-if (contactForm) {
-
-    contactForm.addEventListener("submit", function(event) {
-
-        event.preventDefault();
-
-        window.location.href = "home.html";
-
-    });
-
-}
-
-/* ==============================
-   ADMIN LOGIN
-   ============================== */
-
-const adminLoginForm =
-    document.getElementById("adminLoginForm");
-
-if (adminLoginForm) {
-
-    adminLoginForm.addEventListener("submit", function(event) {
-
-        event.preventDefault();
-
-        window.location.href = "admindashboard.html";
-
-    });
-
-}
-
-/* ==============================
-   ADMIN LOGOUT
-   ============================== */
-
-const adminLogout =
-    document.getElementById("adminLogout");
-
-if (adminLogout) {
-
-    adminLogout.addEventListener("click", function () {
-
-        window.location.href = "adminlogin.html";
-
-    });
-
-}
-const registerForm = document.getElementById("registerForm");
-
-if (registerForm) {
-    registerForm.addEventListener("submit", async function (e) {
-        e.preventDefault();
-
-        const name = document.getElementById("fullName").value.trim();
-        const email = document.getElementById("registerEmail").value.trim();
-        const phone = document.getElementById("mobile").value.trim();
-        const password = document.getElementById("registerPassword").value;
-        const confirmPassword = document.getElementById("confirmPassword").value;
-
-        if (password !== confirmPassword) {
-            alert("Passwords do not match!");
-            return;
-        }
-
-        try {
-            const response = await fetch("http://localhost:3000/api/register", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    name: name,
-                    email: email,
-                    phone: phone,
-                    password: password
-                })
-            });
-
-            const data = await response.json();
-
-            if (data.success) {
-                alert("Registration successful!");
-                window.location.href = "login.html";
-            } else {
-                alert(data.message);
-            }
-
-        } catch (error) {
-            console.error(error);
-            alert("Server connection failed!");
-        }
-    });
-}
-
-const loginForm = document.getElementById("loginForm");
-
-if (loginForm) {
-    loginForm.addEventListener("submit", async function (e) {
-        e.preventDefault();
-
-        const email = document.getElementById("loginEmail").value.trim();
-        const password = document.getElementById("loginPassword").value;
-
-        try {
-            const response = await fetch("http://localhost:3000/api/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    email: email,
-                    password: password
-                })
-            });
-
-            const data = await response.json();
-
-            if (data.success) {
-                localStorage.setItem("userId", data.user.id);
-                localStorage.setItem("userName", data.user.name);
-                localStorage.setItem("userEmail", data.user.email);
-                alert("Login successful!");
-                window.location.href = "home.html";
-            } else {
-                alert(data.message);
-            }
-
-        } catch (error) {
-            console.error(error);
-            alert("Server connection failed!");
-        }
-    });
-}
-
-const donationForm = document.getElementById("donationForm");
-
-if (donationForm) {
-
-    const categoryButtons = document.querySelectorAll(".donate-category");
-    const selectedCategory = document.getElementById("selectedCategory");
-
-    categoryButtons.forEach(button => {
-        button.addEventListener("click", function () {
-
-            categoryButtons.forEach(btn => {
-                btn.classList.remove("active");
-            });
-
-            this.classList.add("active");
-
-            selectedCategory.value = this.dataset.category;
-        });
-    });
-
-
-    donationForm.addEventListener("submit", async function (e) {
-
-        e.preventDefault();
-
-        const userId = localStorage.getItem("userId");
-
-        if (!userId) {
-            alert("Please login first!");
-            window.location.href = "login.html";
-            return;
-        }
-
-        const category = document.getElementById("selectedCategory").value;
-        const itemName = document.getElementById("itemName").value.trim();
-        const quantity = document.getElementById("quantity").value;
-        const condition = document.getElementById("condition").value;
-        const description = document.getElementById("description").value.trim();
-        const location = document.getElementById("location").value.trim();
-
-        try {
-
-            const response = await fetch("http://localhost:3000/api/donations", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    user_id: userId,
-                    category: category,
-                    item_name: itemName,
-                    description: description,
-                    quantity: quantity,
-                    condition: condition,
-                    location: location
-                })
-            });
-
-            const data = await response.json();
-
-            if (data.success) {
-
-                alert("Donation submitted successfully!");
-
-                donationForm.reset();
-
-                selectedCategory.value = "Clothes";
-
-                window.location.href = "mydonations.html";
-
-            } else {
-
-                alert(data.message);
-
-            }
-
-        } catch (error) {
-
-            console.error("Donation Error:", error);
-            alert("Server connection failed!");
-
-        }
-    });
-}
-
-/* ==============================
-   REQUEST FORM
-   ============================== */
-
-const requestForm = document.getElementById("requestForm");
-
-if (requestForm) {
-
-    requestForm.addEventListener("submit", async function (event) {
-
-        event.preventDefault();
-
-        const donationId =
-            document.getElementById("donationId").value;
-
-        const requesterId =
-            localStorage.getItem("userId");
-
-        const requestReason =
-            document.getElementById("requestReason").value.trim();
-
-        if (!requesterId) {
-            alert("Please login first!");
-            window.location.href = "login.html";
-            return;
-        }
-
-        try {
-
-            const response = await fetch(
-                "http://localhost:3000/api/requests",
-                {
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-
-                    body: JSON.stringify({
-                        donation_id: donationId,
-                        requester_id: requesterId,
-                        message: requestReason
-                    })
-                }
-            );
-
-            const data = await response.json();
-
-            if (data.success) {
-
-                alert("Request submitted successfully!");
-
-                requestForm.reset();
-
-                window.location.href = "myrequests.html";
-
-            } else {
-
-                alert(data.message);
-
-            }
-
-        } catch (error) {
-
-            console.error("Request Error:", error);
-
-            alert("Server connection failed!");
-
-        }
-
-    });
-
-}
-// ==============================
-// LOAD MY REQUESTS
-// ==============================
-
-const myRequestsList = document.getElementById("requestsList");
-
-if (myRequestsList) {
-
-    fetch("http://localhost:3000/api/requests/1")
-        .then(response => response.json())
-        .then(data => {
-
-            console.log("MY REQUESTS:", data);
-
-            if (!data.success) {
-                myRequestsList.innerHTML =
-                    "<p>Failed to load requests.</p>";
-                return;
-            }
-
-            if (!data.requests || data.requests.length === 0) {
-                myRequestsList.innerHTML =
-                    "<p>No requests found.</p>";
-                return;
-            }
-
-            myRequestsList.innerHTML = "";
-
-            data.requests.forEach(request => {
-
-                const card = document.createElement("div");
-
-                card.className = "my-request-card";
-
-                card.innerHTML = `
-                    <div class="request-image">
-                        🎁
-                    </div>
-
-                    <div class="request-info">
-
-                        <span class="request-category">
-                            ${request.category || "Donation"}
-                        </span>
-
-                        <h3>
-                            ${request.item_name || "Requested Donation"}
-                        </h3>
-
-                        <p>
-                            ${request.message || "Request submitted"}
-                        </p>
-
-                        <small>
-                            Quantity: ${request.quantity || 1}
-                        </small>
-
-                        <br>
-
-                        <small>
-                            Request ID: ${request.id}
-                        </small>
-
-                    </div>
-
-                    <span class="request-status ${request.status || "pending"}">
-                        ${request.status || "pending"}
-                    </span>
-                `;
-
-                myRequestsList.appendChild(card);
-            });
-
-        })
-        .catch(error => {
-
-            console.error("MY REQUESTS ERROR:", error);
-
-            myRequestsList.innerHTML =
-                "<p>Unable to load requests.</p>";
-
-        });
-}
-
-const adminRequestList = document.getElementById("adminRequestList");
-
-if (adminRequestList) {
-
-    fetch("http://localhost:3000/api/admin/requests")
-        .then(response => response.json())
-        .then(data => {
-
-            if (!data.success) {
-                adminRequestList.innerHTML =
-                    "<p>Failed to load requests.</p>";
-                return;
-            }
-
-            if (data.requests.length === 0) {
-                adminRequestList.innerHTML =
-                    "<p>No requests found.</p>";
-                return;
-            }
-
-            adminRequestList.innerHTML = "";
-
-            data.requests.forEach(request => {
-
-                const card = document.createElement("div");
-
-                card.className = "admin-request-card";
-
-                card.innerHTML = `
-                    <div class="admin-request-icon">
-                        📩
-                    </div>
-
-                    <div>
-                        <strong>
-                            Donation Request #${request.id}
-                        </strong>
-
-                        <small>
-                            Donation ID: ${request.donation_id}
-                        </small>
-                    </div>
-
-                    <span class="table-status ${request.status}">
-                        ${request.status}
-                    </span>
-                `;
-
-                adminRequestList.appendChild(card);
-
-            });
-
-        })
-        .catch(error => {
-
-            console.error("Admin Requests Error:", error);
-
-            adminRequestList.innerHTML =
-                "<p>Unable to load requests.</p>";
-
-        });
-
-}

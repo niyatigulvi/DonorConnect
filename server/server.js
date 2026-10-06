@@ -19,80 +19,70 @@ db.connect((err) => {
         console.log("MySQL connected successfully!");
     }
 });
-app.get("/", (req, res) => {
-    res.json({
-        success: true,
-        message: "DonorConnect Backend Server is Running!"
-    });
-});
+
 app.post("/api/register", (req, res) => {
+
     const { name, email, password } = req.body;
+
     if (!name || !email || !password) {
         return res.status(400).json({
             success: false,
             message: "All fields are required"
         });
     }
-    res.json({
-        success: true,
-        message: "Registration successful!"
-    });
-});
-// Get all donations
-app.get('/api/donations', (req, res) => {
-    const sql = 'SELECT * FROM donations';
 
-    db.query(sql, (err, results) => {
-        if (err) {
-            console.error('Error fetching donations:', err);
-            return res.status(500).json({
-                error: 'Failed to fetch donations'
-            });
-        }
+    const checkSql = "SELECT * FROM users WHERE email = ?";
 
-        res.json(results);
-    });
-});
-
-// Login API
-app.post("/api/login", (req, res) => {
-
-    const { email, password } = req.body;
-
-    if (!email || !password) {
-        return res.status(400).json({
-            success: false,
-            message: "Email and password are required"
-        });
-    }
-
-    const sql = "SELECT * FROM users WHERE email = ? AND password = ?";
-
-    db.query(sql, [email, password], (err, results) => {
+    db.query(checkSql, [email], (err, results) => {
 
         if (err) {
-            console.log("Login Database Error:", err.message);
+            console.log("Check User Error:", err.message);
 
             return res.status(500).json({
                 success: false,
-                message: "Login failed"
+                message: "Database error"
             });
         }
 
-        if (results.length === 0) {
-            return res.status(401).json({
+        if (results.length > 0) {
+            return res.status(400).json({
                 success: false,
-                message: "Invalid email or password"
+                message: "Email already registered"
             });
         }
 
-        res.json({
-            success: true,
-            message: "Login successful!",
-            user: results[0]
-        });
+        const insertSql = `
+            INSERT INTO users (name, email, password)
+            VALUES (?, ?, ?)
+        `;
+
+        db.query(
+            insertSql,
+            [name, email, password],
+            (err, result) => {
+
+                if (err) {
+                    console.log("Registration Database Error:", err.message);
+
+                    return res.status(500).json({
+                        success: false,
+                        message: "Registration failed"
+                    });
+                }
+
+                res.json({
+                    success: true,
+                    message: "Registration successful!",
+                    userId: result.insertId
+                });
+
+            }
+        );
+
     });
+
 });
+
 app.post("/api/donations", (req, res) => {
 
     const {
@@ -140,6 +130,49 @@ app.post("/api/donations", (req, res) => {
             });
         }
     );
+});
+
+// ==============================
+// GET ALL DONATIONS
+// ==============================
+
+app.get("/api/donations", (req, res) => {
+
+    const sql = `
+        SELECT 
+            donations.id,
+            donations.user_id,
+            donations.category,
+            donations.item_name,
+            donations.description,
+            donations.quantity,
+            donations.location,
+            donations.created_at,
+            users.name AS donor_name,
+            users.email AS donor_email
+        FROM donations
+        LEFT JOIN users ON donations.user_id = users.id
+        ORDER BY donations.id DESC
+    `;
+
+    db.query(sql, (err, results) => {
+
+        if (err) {
+            console.log("Get Donations Error:", err.message);
+
+            return res.status(500).json({
+                success: false,
+                message: "Failed to load donations"
+            });
+        }
+
+        res.json({
+            success: true,
+            donations: results
+        });
+
+    });
+
 });
 // ==============================
 // REQUEST API
@@ -372,6 +405,50 @@ app.get("/api/admin/reports", (req, res) => {
             reports: results[0]
         });
     });
+});
+
+// ==============================
+// LOGIN API
+// ==============================
+
+app.post("/api/login", (req, res) => {
+
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({
+            success: false,
+            message: "Email and password are required"
+        });
+    }
+    const sql = "SELECT * FROM users WHERE email = ? AND password = ?";
+
+    db.query(sql, [email, password], (err, results) => {
+
+        if (err) {
+            console.log("Login Database Error:", err.message);
+
+            return res.status(500).json({
+                success: false,
+                message: "Login failed"
+            });
+        }
+
+        if (results.length === 0) {
+            return res.status(401).json({
+                success: false,
+                message: "Invalid email or password"
+            });
+        }
+
+        res.json({
+            success: true,
+            message: "Login successful!",
+            user: results[0]
+        });
+
+    });
+
 });
 app.listen(PORT, () => {
     console.log(`DonorConnect server running on http://localhost:${PORT}`);
